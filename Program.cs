@@ -3,38 +3,20 @@ simulando um ERP simples, que contenha todas as etapas
 desse exemplo de fluxo de pedido. Você deve iniciar o código
 hoje, e finalizá-lo e enviá-lo amanhã.*/
 class Program
-{
-    static string? codigo{get;set;}
-    static string? produto{get;set;}
-    static double preco{get;set;}
-    static int? unidade{get;set;}
-    static int? cpf{get;set;}
+{      
     //Estruturar a classe Estoque 
     class Estoque
     {
         //Variáveis
-        string? separador=new string('-',62);
-        public string? Codigo{get;set;}
-        public string? Produto{get;set;}
-        public double? Preco{get;set;}
-        public int? Unidade{get;set;}
-        //Construtores
-        public Estoque()
-        {}
-        public Estoque(string? codigo,string? produto,double? preco)
-        {
-            Codigo=codigo;
-            Produto=produto;
-            Preco=preco;
-        }
-        public Estoque(string? codigo,string? produto,double? preco,int? unidade):this(codigo,produto,preco)
-        {
-            Unidade=unidade;
-        }
+        string separador=new string('-',62);
+        public string Codigo{get;set;}
+        public string Produto{get;set;}
+        public double Preco{get;set;}
+        public int Unidade{get;set;}        
         //Imprimir dados do produto
         public void DadosProduto()
         {
-            Console.WriteLine($"{separador}\nCódigo do produto:                             {codigo}\nNome do produto:                               {produto}\nPreço do produto:                              {preco:c}\nNúmero de unidades do produto:                 {unidade}\n{separador}");
+            Console.WriteLine($"{separador}\nCódigo do produto:                             {Codigo}\nNome do produto:                               {Produto}\nPreço do produto:                              {Preco.ToString("C")}\nNúmero de unidades do produto:                 {Unidade}\n{separador}");
             Console.ReadKey();
         }        
     }   
@@ -42,17 +24,9 @@ class Program
     class Cliente
     {
         //Variáveis
-        string? separador=new string('-',62);
-        public string? Nome{get;set;}
-        public int? CPF{get;set;}
-        //Construtor
-        public Cliente()
-        {}
-        public Cliente(string? nome,int? cpf)
-        {
-            Nome=nome;
-            CPF=cpf;
-        }
+        string separador=new string('-',62);
+        public string Nome{get;set;}
+        public string CPF{get;set;}
         //Imprimir dados do cliente
         public void DadosCliente()
         {
@@ -64,22 +38,24 @@ class Program
     //Corpo do programa
     public static void Main()
     {
-        string? separador=new string('-',62),opcao,opcaoestoque,opcaounidade,opcaocliente,nome,Preco,digitarunidade,digitarcpf;
-        Estoque estoque;
-        Cliente cliente;        
+        string separador=new string('-',62),opcao,opcaoestoque,opcaounidade,opcaocliente,codigo,produto,digitarpreco,digitarunidade,cpf;
+        Estoque estoque=new Estoque();
+        Cliente cliente=new Cliente();
         Console.WriteLine($"{separador}\nBem vindos ao gerenciamento do mercado Berimbau\n{separador}");
         Menu();
         //Menu inicial
         void Menu()
         {
             Console.WriteLine("Gerenciar estoque, gerenciar clientes ou sair?");
-            opcao=Console.ReadLine();
+            opcao=Console.ReadLine();            
             if(opcao.ToLower().Trim()=="estoque")
             {
+                Console.WriteLine("\n");
                 PerguntarEstoque();
             }
             else if(opcao.ToLower().Trim()=="clientes")
             {
+                Console.WriteLine("\n");
                 PerguntarCliente();                               
             }
             else if(opcao.ToLower().Trim()=="sair")
@@ -90,7 +66,7 @@ class Program
             }
             else
             {
-                Console.WriteLine("Inserção incorreta, favor reinserir.");
+                Console.WriteLine("Entrada incorreta, favor reinserir.\n");
                 Menu();
             } 
         }
@@ -101,31 +77,35 @@ class Program
             opcaoestoque=Console.ReadLine();
             if(opcaoestoque.ToLower().Trim()=="cadastrar")
             {
+                Console.WriteLine("\n");
                 CodigoProduto();
             }
             else if(opcaoestoque.ToLower().Trim()=="repor")
             {
+                Console.WriteLine("\n");
                 ReporProduto();                                                  
             }
             else
             {
-                Console.WriteLine("Opção incorreta, de volta ao menu inicial.");                
+                Console.WriteLine("Opção incorreta, de volta ao menu inicial.\n");                
                 Menu();
             }
         }
         //Cadastrar produto no estoque
         void CodigoProduto()
-        {
+        {            
             Console.WriteLine("Código do produto");
             codigo=Console.ReadLine();
-            bool? validarcodigo=codigo.Length==5&&codigo.All(char.IsDigit);
+            bool validarcodigo=codigo.Length==5&&codigo.All(char.IsDigit);
             if(validarcodigo==false)
             {
-                Console.WriteLine("Código do produto com menos ou mais de cinco digitos, em branco ou com caracteres, favor reinserir.");
+                Console.WriteLine("Código do produto com menos ou mais de cinco digitos, em branco ou com caracteres, favor reinserir.\n");
                 CodigoProduto();
             }
             else
             {
+                Console.WriteLine("\n");
+                estoque.Codigo+=codigo;
                 NomeProduto();
             }            
         }
@@ -135,26 +115,30 @@ class Program
             produto=Console.ReadLine();
             if(string.IsNullOrWhiteSpace(produto)||produto.Length<2)
             {
-                Console.WriteLine("Nome do produto em branco ou com menos de dois caracteres, favor reinserir.");
+                Console.WriteLine("Nome do produto em branco ou com menos de dois caracteres, favor reinserir.\n");
                 NomeProduto();
             }
             else
             {
+                Console.WriteLine("\n");
+                estoque.Produto+=produto;
                 PrecoProduto();
             }            
         }
         void PrecoProduto()
         {
             Console.WriteLine("Preço do produto");
-            Preco=Console.ReadLine();            
-            if(string.IsNullOrWhiteSpace(Preco)||Preco.All(char.IsLetter)||Preco=="0")
+            digitarpreco=Console.ReadLine();            
+            if(string.IsNullOrWhiteSpace(digitarpreco)||digitarpreco.All(char.IsLetter)||digitarpreco=="0")
             {
-                Console.WriteLine("Preço do produto em branco ou com caracteres, favor reinserir.");
+                Console.WriteLine("Preço do produto em branco ou com caracteres, favor reinserir.\n");
                 PrecoProduto();
             }
             else
             {
-                double.TryParse(Preco,out double preco);
+                Console.WriteLine("\n");
+                double.TryParse(digitarpreco,out double preco);
+                estoque.Preco+=preco;
                 PerguntarUnidadeProduto();
             }            
         }
@@ -164,11 +148,11 @@ class Program
             opcaounidade=Console.ReadLine();
             if(opcaounidade.ToLower().Trim()=="sim")
             {
+                Console.WriteLine("\n");
                 InserirUnidadeProduto();                                            
             }
             else
             {
-                estoque=new Estoque(codigo,produto,preco);
                 estoque.DadosProduto();
                 RecomecarEstoque();
             }
@@ -177,16 +161,16 @@ class Program
         {
             Console.WriteLine("Unidades do produto");
             digitarunidade=Console.ReadLine();
-            bool? validarunidade=string.IsNullOrWhiteSpace(digitarunidade)||digitarunidade.All(char.IsDigit);
+            bool validarunidade=string.IsNullOrWhiteSpace(digitarunidade)||digitarunidade.All(char.IsDigit);
             if(validarunidade==false)
             {
-                Console.WriteLine("Unidades do produto em branco ou com caracteres, favor reinserir.");
+                Console.WriteLine("Unidades do produto em branco ou com caracteres, favor reinserir.\n");
                 InserirUnidadeProduto();
             }
             else
             {
                 int.TryParse(digitarunidade,out int unidade);
-                estoque=new Estoque(codigo,produto,preco,unidade);
+                estoque.Unidade+=unidade;
                 estoque.DadosProduto();
                 RecomecarEstoque();                
             }                        
@@ -199,13 +183,13 @@ class Program
             bool validarunidade=string.IsNullOrWhiteSpace(digitarunidade)||digitarunidade.All(char.IsDigit);
             if(validarunidade==false)
             {
-                Console.WriteLine("Unidades do produto em branco ou com caracteres, favor reinserir.");
+                Console.WriteLine("Unidades do produto em branco ou com caracteres, favor reinserir.\n");
                 ReporProduto();
             }
             else
             {
-                int.TryParse(digitarunidade,out int unidade);
-                estoque=new Estoque();
+                int.TryParse(digitarunidade,out int reporunidade);
+                estoque.Unidade+=reporunidade;
                 estoque.DadosProduto();
                 RecomecarEstoque();
             }       
@@ -217,10 +201,12 @@ class Program
             opcaounidade=Console.ReadLine();
             if(opcaounidade.ToLower().Trim()=="sim")
             {
+                Console.WriteLine("\n");
                 PerguntarEstoque();                            
             }
             else
             {
+                Console.WriteLine("\n");
                 Menu();
             }
         }
@@ -231,15 +217,17 @@ class Program
             opcaocliente=Console.ReadLine();
             if(opcaocliente.ToLower().Trim()=="cadastrar")
             {  
+                Console.WriteLine("\n");
                 NomeCliente();
             }
             else if(opcaocliente.ToLower().Trim()=="alterar")
             {
+                Console.WriteLine("\n");
                 AlterarCliente();
             }
             else
             {
-                Console.WriteLine("Opção incorreta, de volta ao menu inicial.");                
+                Console.WriteLine("Opção incorreta, de volta ao menu inicial.\n");                
                 Menu();
             }
         }
@@ -247,31 +235,31 @@ class Program
         void NomeCliente()
         {
             Console.WriteLine("Nome do cliente");
-            nome=Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(nome)||nome.Length<3)
+            cliente.Nome=Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(cliente.Nome)||cliente.Nome.Length<3)
             {
-                Console.WriteLine("Nome do cliente em branco ou com menos de três caracteres, favor reinserir.");
+                Console.WriteLine("Nome do cliente em branco ou com menos de três caracteres, favor reinserir.\n");
                 NomeCliente();
             }
             else
             {
+                Console.WriteLine("\n");
                 CPFCliente();
             }
         }
         void CPFCliente()
         {
             Console.WriteLine("CPF do cliente");
-            digitarcpf=Console.ReadLine();
-            bool? validarcpf=digitarcpf.Length==11&&digitarcpf.All(char.IsDigit);
+            cpf=Console.ReadLine();
+            bool validarcpf=cpf.Length==11&&cpf.All(char.IsDigit);
             if(validarcpf==false)
             {
-                Console.WriteLine("CPF do cliente com menos ou mais de onze digitos, em branco ou com caracteres, favor reinserir.");
+                Console.WriteLine("CPF do cliente com menos ou mais de onze digitos, em branco ou com caracteres, favor reinserir.\n");
                 CPFCliente();
             }
             else
             {
-                int.TryParse(digitarcpf,out int cpf);
-                cliente=new Cliente(nome,cpf);
+                cliente.CPF+=cpf;
                 cliente.DadosCliente();
                 RecomecarCliente(); 
             }            
@@ -280,15 +268,14 @@ class Program
         void AlterarCliente()
         {
             Console.WriteLine("Alterar nome do cliente");
-            nome=Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(nome)||nome.Length<3)
+            cliente.Nome=Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(cliente.Nome)||cliente.Nome.Length<3)
             {
-                Console.WriteLine("Nome do cliente em branco ou com menos de três caracteres, favor reinserir.");
+                Console.WriteLine("Nome do cliente em branco ou com menos de três caracteres, favor reinserir.\n");
                 NomeCliente();
             }
             else
             {
-                Cliente cliente=new Cliente();
                 cliente.DadosCliente();
                 RecomecarCliente(); 
             }
@@ -301,10 +288,12 @@ class Program
             opcaocliente=Console.ReadLine();
             if(opcaocliente.ToLower().Trim()=="sim")
             {
+                Console.WriteLine("\n");
                 PerguntarCliente();                             
             }
             else
             {
+                Console.WriteLine("\n");
                 Menu();
             }
         }       
