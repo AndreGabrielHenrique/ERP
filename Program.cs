@@ -302,6 +302,6 @@ class Program
         {
             Console.ReadKey();
             Console.Clear();
-        }        
+        }
     }         
 }
